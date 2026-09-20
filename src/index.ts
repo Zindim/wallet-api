@@ -2,11 +2,13 @@ import express from "express";
 import dotenv from "dotenv";
 import { pool } from "./db/pool";
 import authRoutes from "./routes/auth";
+import walletRoutes from "./routes/wallets";
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
+app.use("/wallets", walletRoutes);
 app.use("/auth", authRoutes);
 
 app.get("/health", (req, res) => {
