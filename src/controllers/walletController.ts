@@ -88,3 +88,21 @@ export async function withdraw(req: AuthedRequest, res: Response) {
     client.release();
   }
 }
+
+export async function getHistory(req: AuthedRequest, res: Response) {
+  const walletId = req.params.id;
+
+  const wallet = await pool.query(
+    "SELECT id FROM wallets WHERE id = $1 AND user_id = $2",
+    [walletId, req.userId]
+  );
+  if (!wallet.rows[0]) return res.status(404).json({ error: "wallet not found" });
+
+  const result = await pool.query(
+    `SELECT * FROM transactions
+     WHERE from_wallet_id = $1 OR to_wallet_id = $1
+     ORDER BY created_at DESC`,
+    [walletId]
+  );
+  res.json(result.rows);
+}

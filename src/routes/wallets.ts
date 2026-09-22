@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { requireAuth } from "../middleware/auth";
-import { createWallet, getWallet, deposit, withdraw } from "../controllers/walletController";
+import { createWallet, getWallet, deposit, withdraw, getHistory } from "../controllers/walletController";
 import { transfer } from "../controllers/transferController";
 
 const router = Router();
@@ -10,4 +10,5 @@ router.get("/:id", getWallet);
 router.post("/transfers", transfer);
 router.post("/:id/deposit", deposit);
 router.post("/:id/withdraw", withdraw);
+router.get("/:id/transactions", getHistory);
 export default router;
