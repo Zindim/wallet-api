@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { pool } from "./db/pool";
 import authRoutes from "./routes/auth";
 import walletRoutes from "./routes/wallets";
+import { errorHandler } from "./middleware/errorHandler";
 
 dotenv.config();
 
@@ -20,5 +21,6 @@ app.get("/db-test", async (req, res) => {
   res.json(result.rows[0]);
 });
 
+app.use(errorHandler);
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
