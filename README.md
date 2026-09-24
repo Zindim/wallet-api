@@ -46,6 +46,37 @@ This starts the API and a Postgres instance together. Then apply the schema:
 docker compose exec -T db psql -U postgres -d wallet_dev < src/db/schema.sql
 ```
 
+## Example usage
+
+```bash
+# Register
+curl -X POST https://wallet-api-096w.onrender.com/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"email": "you@example.com", "password": "yourpassword"}'
+
+# Log in
+curl -X POST https://wallet-api-096w.onrender.com/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "you@example.com", "password": "yourpassword"}'
+
+# Create a wallet (use the token from login)
+curl -X POST https://wallet-api-096w.onrender.com/wallets \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+# Deposit funds
+curl -X POST https://wallet-api-096w.onrender.com/wallets/YOUR_WALLET_ID/deposit \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"amount": 5000, "idempotencyKey": "unique-string-1"}'
+
+# Retry the same deposit — proves idempotency, balance won't double
+curl -X POST https://wallet-api-096w.onrender.com/wallets/YOUR_WALLET_ID/deposit \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"amount": 5000, "idempotencyKey": "unique-string-1"}'
+```
+
+
 ## Running tests
 ```bash
 npx jest
